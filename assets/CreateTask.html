@@ -1,0 +1,864 @@
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/flatpickr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.9/themes/airbnb.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+    <title>Create Task</title>
+
+    <style>
+        .loader {
+            display: none;
+            vertical-align: middle;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            width: 30px;
+            padding: 3px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: #000000;
+            --_m:
+                conic-gradient(#19191900 10%, #343434),
+                linear-gradient(#4d4d4d 0 0) content-box;
+            -webkit-mask: var(--_m);
+            mask: var(--_m);
+            -webkit-mask-composite: source-out;
+            mask-composite: subtract;
+            animation: l3 1s infinite linear;
+        }
+
+        @keyframes l3 {
+            to {
+                transform: rotate(1turn)
+            }
+        }
+
+        .loader-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(244, 244, 244, 0.5);
+            z-index: 9;
+        }
+
+        .textarea {
+            display: block;
+            width: 100%;
+            overflow: hidden;
+            resize: both;
+            min-height: 150px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loader z-10" id="loader"></div>
+    <div class="loader-overlay" id="loaderOverlay"></div>
+
+    <div class="p-3 z-20">
+        <div>
+            <span class="text-xl text-gray-900 font-semibold">Create Task</span>
+            <hr class="relative top-2 h-0.5 border-t-0 bg-black opacity-10" />
+        </div>
+
+        <div class="pt-5">
+            <label for="Task" class="block mb-2 text-gray-700 text-base font-bold">Task name</label>
+            <input type="text" id="Taskname"
+                class="block bg-white w-4/6 border border-gray-300 text-black text-sm font-normal rounded-md focus:border-gray-400 focus:border-2 p-3 focus:outline-none">
+        </div>
+
+        <div class="w-full">
+            <label class="block text-gray-700 text-sm font-bold pt-2 mb-2">Task Description</label>
+            <div class="">
+                <span id="editorjs" name="editor" class="textarea z-10 bg-aliceblue border border-gray-300 rounded p-4"
+                    role="textbox" contenteditable></span>
+                <!-- <div id="editorjs" name="editor" class="relative z-10 bg-aliceblue border border-gray-300 rounded p-4"
+                    style="max-height: 150px; overflow-y: auto;padding: 51px;"></div> -->
+                <!-- <div id="loader-icon">
+                        <img src="loader.gif" id="image-size" />
+                    </div> -->
+            </div>
+        </div>
+
+        <div class="pt-5">
+            <label for="Assigntask" class="block mb-2 text-gray-700 text-base font-bold">Assign task to</label>
+            <input id="Assigntask" type="text" placeholder="Search for user" onfocus="SearchForAssigning()"
+                class="w-3/5 px-2 py-2 bg-white text-sm border-2 border-gray-200 focus:border-gray-400 rounded outline-none relative" />
+            <i class="fas fa-times relative right-7 cursor-pointer" onclick="clearSelection()" id="userclearicon"></i>
+
+            <div id="usersdropdown"
+                style="overflow: scroll; overflow-x: unset; height: 111px; z-index: 1; width: 58%; height: 28%;"
+                class="absolute mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+
+                <ul id="optionsList" class="py-1">
+                    <!-- Options will be dynamically added here -->
+                </ul>
+            </div>
+
+            <div id="selectedAssignUser" class="mt-2">
+                <!-- Selected matter types will be dynamically added here -->
+            </div>
+        </div>
+
+        <div class="pt-5">
+            <label for="TaskReviewer" class="block mb-2 text-gray-700 text-base font-bold">Assign task to</label>
+            <input id="TaskReviewInput" type="text" placeholder="Search for user" onfocus="SearchForReviewer()"
+                class="w-3/5 px-2 py-2 bg-white text-sm border-2 border-gray-200 focus:border-gray-400 rounded outline-none relative" />
+            <i class="fas fa-times relative right-7 cursor-pointer" onclick="clearReviewerSelection()"
+                id="clearReviewer"></i>
+
+            <div id="TaskReviewdropdown"
+                style="overflow: scroll; overflow-x: unset; height: 111px; z-index: 1; width: 58%; height: 28%;"
+                class="absolute mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+
+                <ul id="TaskreviewerList" class="py-1">
+                    <!-- Options will be dynamically added here -->
+                </ul>
+            </div>
+
+            <div id="selectedReviewUser" class="mt-2">
+                <!-- Selected matter types will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="relative pt-2 flex rounded-lg" style="margin-left: -10%; margin-top: -4%;">
+            <div x-data
+                x-init="flatpickr($refs.datetimewidget, {wrap: true, enableTime: true, defaultDate: 'today', maxDate: 'today', dateFormat: 'M j, Y h:i K',});"
+                x-ref="datetimewidget" class="flatpickr container mx-auto col-span-6 sm:col-span-6 mt-5">
+                <label for="inp4" class="block pt-3 text-gray-700 text-base font-bold">Due date</label>
+                <div class="relative pt-2 flex rounded-lg">
+                    <input x-ref="datetime" type="text" id="dueDate" data-input placeholder="Select data & time"
+                        class="p-2 block w-4/6 border-2 border-gray-200 rounded text-md focus:border-gray-400 focus:border-2 focus:outline-none"
+                        style="height: 45px;" />
+                    <button type="button"
+                        class="-ms-px py-3 px-4 inline-flex border-2 rounded justify-center items-center gap-2 font-medium bg-white text-black text-base align-middle hover:bg-gray-50 focus:border-gray-400 focus:border-2 focus:outline-none"
+                        style="height: 45px;">
+                        Change
+                    </button>
+                </div>
+            </div>
+        </div>
+        <p class="px-3">
+            The due date of a task cannot be later than the target date of the milestone </br>
+            it belongs to. Extend the milestone target date to extend the task.
+        </p>
+    </div>
+    </div>
+
+    <footer class="bg-gray-100 p-4 flex justify-end gap-3 sticky bottom-0">
+        <button id="close"
+            class="border border-gray-300 cursor-pointer bg-white text-black font-medium py-2 px-3 rounded-lg"
+            onclick="closeDialog()">Cancel</button>
+        <button onclick="createTask()" id="createTaskBtn"
+            class="border border-gray-300 bg-blue-600 cursor-pointer text-white font-medium py-2 px-3 rounded-lg">Create</button>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/raw"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/link@latest"></script>
+    <script src="editor-tool.js"></script>
+    <script>
+        function startLoader() {
+            // console.log("Loader Start");
+            var loader = document.getElementById('loader');
+            loader.style.display = 'block';
+
+            var loaderOverlay = document.getElementById('loaderOverlay');
+            loaderOverlay.style.display = 'block';
+        }
+
+        function endLoader() {
+            // console.log("Loader End");
+            var loader = document.getElementById('loader');
+            loader.style.display = 'none';
+
+            var loaderOverlay = document.getElementById('loaderOverlay');
+            loaderOverlay.style.display = 'none';
+        }
+
+        // Office.onReady(function () {
+        //     startLoader();
+        //     Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived,
+        //         onMessageFromParent);
+        // });
+
+        Office.onReady(function () {
+            // startLoader();
+            Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived,
+                onMessageFromParent);
+        });
+
+        // if (navigator.geolocation) {
+        //     navigator.geolocation.getCurrentPosition(
+        //         (position) => {
+        //             const latitude = position.coords.latitude;
+        //             const longitude = position.coords.longitude;
+        //             console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+        //         },
+        //         (error) => {
+        //             console.error(`Error getting location: ${error.message}`);
+        //         }
+        //     );
+        // } else {
+        //     console.error('Geolocation is not supported by this browser.');
+        // }
+
+        const dummyData = '';
+        let editor = new EditorJS({
+            holder: 'editorjs',
+            tools: {
+                header: Header,
+                list: List,
+                checklist: {
+                    class: Checklist
+                }
+            },
+            data: { blocks: [] }
+        });
+
+        let BearerToken;
+        let mailSubject;
+        let mailSubjectFromLS;
+        let mailBody;
+        let mailBodyFromLS;
+        let matterId;
+        let currentMatterId;
+        let workspaceId;
+        let currentMatterWorkspaceId;
+        let userId;
+        let selectedAssigntaskUserId;
+        let selectedTaskReviewUserId;
+        let fullNames = [];
+        let combinedData = [];
+        let userData = [];
+        // let selectedMilestoneId;
+        let currentMilestoneId;
+        let selectedMileStoneDueDate;
+        let selectedMileStoneDescriptionType;
+        let selectedMileStoneDescriptionText;
+        let authenicateToken;
+        let getCombinedDataFromLS;
+        let userNames;
+        let newAuthenicateToken;
+        // let selectedWorkspaceId;
+        let taskId;
+        function onMessageFromParent(arg) {
+            // startLoader();
+            const messageFromParent = JSON.parse(arg.message);
+            mailBody = messageFromParent.mailBody;
+            // console.log(mailBody);
+            localStorage.setItem("mailBody", mailBody);
+            mailBodyFromLS = localStorage.getItem("mailBody");
+            console.log(mailBodyFromLS);
+            editor.blocks.renderFromHTML(mailBodyFromLS);
+
+            document.getElementById("Taskname").value = messageFromParent.subject;
+            mailSubject = messageFromParent.subject;
+            // console.log(mailSubject);
+            localStorage.setItem("mailSubject", mailSubject);
+
+            BearerToken = messageFromParent.token;
+            // console.log(BearerToken);
+
+            matterId = messageFromParent.matterid;
+            // console.log(matterId);
+
+            currentMatterId = messageFromParent.currentMatterId;
+            // console.log(currentMatterId);
+
+            workspaceId = messageFromParent.workspaceid;
+            // console.log(workspaceId);
+
+            currentMatterWorkspaceId = messageFromParent.currentMatterWorkspaceId;
+            // console.log(currentMatterWorkspaceId);
+
+            newAuthenicateToken = messageFromParent.newAuthenicateToken;
+            // console.log(newAuthenicateToken);
+
+            // Fetch All Users
+            if (newAuthenicateToken) {
+                var myNewHeaders = new Headers();
+                myNewHeaders.append("Authorization", "Bearer " + newAuthenicateToken);
+
+                var requestOptions = {
+                    method: 'GET',
+                    headers: myNewHeaders,
+                    redirect: 'follow'
+                };
+
+                fetch("https://app-staging.hivelight.com/v1/users?matterId=" + matterId, requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        // console.log(result);
+                        let data = result.data;
+                        console.log(data);
+
+                        const userData = {
+                            userId: data.map(user => user.id),
+                            userFullName: data.map(user => `${user.attributes.firstName} ${user.attributes.lastName}`),
+                            userStatus: data.map(user => user.attributes.status)
+                        }
+                        // console.log(userData);
+
+                        combinedData = userData.userFullName.map((fullName, index) => ({
+                            userId: userData.userId[index],
+                            userFullName: fullName,
+                            userStatus: userData.userStatus[index]
+                        }));
+                        // console.log(combinedData);
+                        localStorage.setItem("combinedData", JSON.stringify(combinedData));
+                        // endLoader();
+                    })
+                    .catch(error => {
+                        console.log('error', error);
+                        // endLoader();
+                    });
+            }
+
+            // selectedMilestoneId = messageFromParent.selectedMilestoneId;
+            // console.log(selectedMilestoneId);
+
+            currentMilestoneId = messageFromParent.currentMilestoneId;
+            console.log(currentMilestoneId);
+
+            selectedMileStoneDueDate = messageFromParent.selectedMileStoneDueDate;
+            console.log(selectedMileStoneDueDate);
+
+            selectedMileStoneDescriptionType = messageFromParent.selectedMileStoneDescriptionType;
+            console.log(selectedMileStoneDescriptionType);
+
+            selectedMileStoneDescriptionText = messageFromParent.selectedMileStoneDescriptionText;
+            console.log(selectedMileStoneDescriptionText);
+
+            // selectedWorkspaceId = messageFromParent.selectedWorkspaceId;
+            // console.log(selectedWorkspaceId);
+
+            localStorage.setItem("Token", JSON.stringify(BearerToken));
+        }
+
+        // Close Dialog Function
+        let cancelDialog = "Cancel Dialog";
+        function closeDialog() {
+            Office.context.ui.messageParent(JSON.stringify(cancelDialog));
+        }
+
+        // document.getElementById("Taskname").value = subject;
+        // document.getElementById("editorjs").innerHTML = emailbody;
+
+        const storedToken = window.localStorage.getItem("Token");
+        const savedToken = JSON.parse(storedToken);
+        console.log(savedToken);
+
+        let baseUrl = "https://app-staging.hivelight.com/";
+
+        // Create Matter Function
+        function createTask() {
+            startLoader();
+            let createTaskBtn = document.getElementById("createTaskBtn");
+            createTaskBtn.style.backgroundColor = '#6F75F3';
+
+            const taskName = document.getElementById('Taskname').value;
+            const mailBodyHTML = document.getElementById("editorjs").innerText;
+            const assignTask = document.getElementById('Assigntask').value;
+            const taskReview = document.getElementById('TaskReviewInput').value;
+            const dueDate = document.getElementById('dueDate').value;
+            console.log(dueDate);
+
+            const dateObject = new Date(dueDate);
+            const isString = dateObject.toISOString();
+            const dueDateTime = isString.replace(/[-T:.Z]/g, '').substring(0, 13);
+            console.log(dueDateTime);
+            const newDateTime = parseInt(dueDateTime);
+
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Authorization", "Bearer " + newAuthenicateToken);
+
+            const requestData = {
+                "jsonapi": {
+                    "version": "1.0"
+                },
+                "data": {
+                    "type": "task",
+                    "attributes": {
+                        "name": taskName,
+                        "matter-id": currentMatterId,
+                        "milestone-id": currentMilestoneId,
+                        "due-date": newDateTime,
+                        "assignees": [
+                            selectedAssigntaskUserId
+                        ],
+                        "reviewers": [
+                            selectedTaskReviewUserId
+                        ]
+                    }
+                }
+            };
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: JSON.stringify(requestData),
+                redirect: "follow"
+            };
+
+            fetch("https://app-staging.hivelight.com/v1/tasks", requestOptions)
+                .then((response) => response.text())
+                .then((result) => {
+                    console.log(result);
+                    let data = JSON.parse(result);
+                    console.log(data);
+                    taskId = data.data.id;
+                    console.log(taskId);
+
+                    let combinedMessage = {
+                        taskId: taskId,
+                        result: result
+                    };
+
+                    Office.context.ui.messageParent(JSON.stringify(combinedMessage));
+                    endLoader();
+                })
+                .catch((error) => {
+                    console.error(error);
+                    endLoader();
+                });
+        }
+
+        // Get Task Dialog Data from local Storage
+        mailSubjectFromLS = localStorage.getItem("mailSubject");
+        console.log(mailSubjectFromLS);
+        document.getElementById("Taskname").value = mailSubjectFromLS;
+
+        const getCombinedData = localStorage.getItem("combinedData");
+        getCombinedDataFromLS = JSON.parse(getCombinedData);
+        console.log(getCombinedDataFromLS);
+
+        fullNames = getCombinedDataFromLS.map(user => user.userFullName);
+        console.log('Full Names:', fullNames);
+
+        let assignTaskUser = [];
+        let selectedAssignUserStatus;
+        let userclearicon = document.getElementById('userclearicon');
+        userclearicon.style.display = "none";
+
+        function populateDropdown(filteredOptions) {
+            const optionsList = document.getElementById('optionsList');
+            optionsList.innerHTML = '';
+
+            filteredOptions.forEach((option, index) => {
+                // console.log(option);
+                const li = document.createElement('li');
+                li.style.cursor = 'pointer';
+                li.style.transition = 'background-color 0.3s';
+                li.classList.add('flex', 'items-center', 'text-gray-700', 'hover:bg-gray-100', 'px-4', 'py-2', 'cursor-pointer');
+
+                li.style.padding = '8px';
+                li.style.borderBottom = '1px solid #ccc';
+
+                li.addEventListener('mouseenter', () => {
+                    li.style.backgroundColor = '#F3FDFF';
+                    li.style.color = '#000000';
+                });
+
+                li.addEventListener('mouseleave', () => {
+                    li.style.backgroundColor = 'transparent';
+                    li.style.color = 'black';
+                });
+
+                const user = document.createElement('div');
+
+                function getRandomColor() {
+                    const letters = '0123456789ABCDEF';
+                    let color = '#';
+                    for (let i = 0; i < 6; i++) {
+                        color += letters[Math.floor(Math.random() * 6)];
+                    }
+                    return color;
+                }
+
+                user.classList.add('w-8', 'h-8', 'rounded-full', 'text-white', 'flex', 'items-center', 'justify-center', 'mr-2');
+                user.style.backgroundColor = getRandomColor();
+                const initials = option.split(' ', 2).map(word => word.charAt(0)).join('').toUpperCase();
+                user.textContent = initials;
+
+                li.appendChild(user);
+
+                // Styling portion for name and role
+                const userInfoContainer = document.createElement('div');
+                userInfoContainer.classList.add('flex', 'flex-col', 'mx-2');
+
+                const userName = document.createElement('span');
+                userName.textContent = option;
+                userName.classList.add('pt-2', 'text-base', 'font-semibold');
+
+                const userRole = document.createElement('span');
+                userRole.textContent = getCombinedDataFromLS[index].userStatus;
+
+                userInfoContainer.appendChild(userName);
+                userInfoContainer.appendChild(userRole);
+
+                li.appendChild(userInfoContainer);
+
+                li.onclick = () => selectOption(option);
+                optionsList.appendChild(li);
+            });
+        }
+
+        function SearchForAssigning() {
+            const searchInput = document.getElementById('Assigntask');
+            const usersdropdown = document.getElementById('usersdropdown');
+            const searchTerm = searchInput.value.toLowerCase();
+            console.log(searchTerm);
+
+            const filteredUserArray = fullNames.filter(option => option.toLowerCase().includes(searchTerm));
+            // console.log(filteredUserArray);
+
+            populateDropdown(filteredUserArray);
+            usersdropdown.classList.toggle('hidden', filteredUserArray.length === 0);
+            usersdropdown.style.display = 'block';
+        }
+
+        function selectOption(option) {
+            // const searchInput = document.getElementById('Assigntask');
+            // searchInput.value = option;
+            // // owner.push(option);
+            // // console.log(owner);
+
+            // const selectedUser = getCombinedDataFromLS.find(user => user.userFullName === option);
+            // if (selectedUser) {
+            //     selectedAssigntaskUserId = selectedUser.userId;
+            //     console.log('Selected Assigntask UserId:', selectedAssigntaskUserId);
+
+            //     const usersdropdown = document.getElementById('usersdropdown');
+            //     usersdropdown.style.display = 'none';
+            //     userclearicon.style.display = "inline"
+            //     document.getElementById('usersdropdown').classList.add('hidden');
+            // }
+
+            document.getElementById('Assigntask').style.display = 'none';
+            document.getElementById('usersdropdown').style.display = 'none';
+
+            const selectedMatterTypesContainer = document.getElementById('selectedAssignUser');
+            const existingMatterTypeItems = selectedMatterTypesContainer.querySelectorAll('.task-type-toast-item');
+
+            const selectedUser = getCombinedDataFromLS.find(user => user.userFullName === option);
+            if (selectedUser) {
+                selectedAssigntaskUserId = selectedUser.userId;
+                console.log('Selected Assigntask UserId:', selectedAssigntaskUserId);
+
+                selectedAssignUserStatus = selectedUser.userStatus;
+                console.log('Selected Assigntask UserStatus:', selectedAssignUserStatus);
+            }
+
+            const initials = getInitials(option);
+            const bgColor = getRandomColor();
+
+            assignTaskUser.push(option);
+            console.log(assignTaskUser);
+            const toastContainer = document.getElementById('selectedAssignUser');
+            const toast = document.createElement('div');
+            toast.className = 'flex justify-between items-center p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 mb-2 task-type-toast-item';
+            toast.style.width = '60%';
+            toast.dataset.option = option;
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <div class="ms-3 text-sm font-normal flex items-center flex-row">
+                        <span style="height: 30px; width: 30px; background: ${bgColor};" class="rounded-full text-white flex items-center justify-center">${initials.toUpperCase()}</span> 
+                        <div class="flex flex-col">
+                            <span style="padding-top: 5px; font-size: 16px;" class="px-2 font-semibold text-black">${option}</span>
+                            <span class="px-2">${selectedAssignUserStatus}</span>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="-mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" onclick="removeSelectedAssignUser(this)" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                </button>    
+            `;
+
+            toastContainer.appendChild(toast);
+        }
+
+        function getInitials(name) {
+            const words = name.split(' ', 2);
+            const initials = words.map(word => word.charAt(0)).join('');
+            return initials;
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 6)];
+            }
+            return color;
+        }
+
+        function removeSelectedAssignUser(button) {
+            const toast = button.parentElement;
+            const toastContainer = toast.parentElement;
+            const optionToRemove = toast.dataset.option;
+            assignTaskUser = assignTaskUser.filter(option => option !== optionToRemove);
+            // console.log(assignTaskUser);
+
+            document.getElementById('Assigntask').style.display = 'block';
+            toastContainer.removeChild(toast);
+        }
+
+        function showDropdown() {
+            const usersdropdown = document.getElementById('usersdropdown');
+            usersdropdown.style.display = 'block';
+        }
+
+        function clearSelection() {
+            const searchInput = document.getElementById('Assigntask');
+            searchInput.value = '';
+            // owner = [];
+            // console.log(owner);
+
+            document.getElementById('usersdropdown').classList.add('hidden');
+            userclearicon.style.display = "none";
+        }
+
+        document.addEventListener('click', function (event) {
+            const usersinput = document.getElementById('Assigntask');
+            const usersdropdown = document.getElementById('usersdropdown');
+
+            if (!usersinput.contains(event.target) && !usersdropdown.contains(event.target)) {
+                hideusersdropdown();
+            }
+        });
+
+        function hideusersdropdown() {
+            const dropdown = document.getElementById('usersdropdown');
+            dropdown.style.display = 'none';
+        } // search user ends
+
+        // Task Reviewer start
+        let assignReviewerUser = [];
+        let selectedReviewerUserStatus;;
+        let clearReviewer = document.getElementById('clearReviewer');
+        clearReviewer.style.display = "none";
+
+        function populateTaskReviewerDropdown(filteredOptions) {
+            const TaskreviewerList = document.getElementById('TaskreviewerList');
+            TaskreviewerList.innerHTML = '';
+
+            filteredOptions.forEach((option, index) => {
+                // console.log(option);
+                const li = document.createElement('li');
+                li.style.cursor = 'pointer';
+                li.style.transition = 'background-color 0.3s';
+                li.classList.add('flex', 'items-center', 'text-gray-700', 'hover:bg-gray-100', 'px-4', 'py-2', 'cursor-pointer');
+
+                li.style.padding = '8px';
+                li.style.borderBottom = '1px solid #ccc';
+
+                li.addEventListener('mouseenter', () => {
+                    li.style.backgroundColor = '#F3FDFF';
+                    li.style.color = '#000000';
+                });
+
+                li.addEventListener('mouseleave', () => {
+                    li.style.backgroundColor = 'transparent';
+                    li.style.color = 'black';
+                });
+
+                const user = document.createElement('div');
+
+                function getRandomColor() {
+                    const letters = '0123456789ABCDEF';
+                    let color = '#';
+                    for (let i = 0; i < 6; i++) {
+                        color += letters[Math.floor(Math.random() * 6)];
+                    }
+                    return color;
+                }
+
+                user.classList.add('w-8', 'h-8', 'rounded-full', 'text-white', 'flex', 'items-center', 'justify-center', 'mr-2');
+                user.style.backgroundColor = getRandomColor();
+                const initials = option.split(' ', 2).map(word => word.charAt(0)).join('').toUpperCase();
+                user.textContent = initials;
+
+                li.appendChild(user);
+
+                const userInfoContainer = document.createElement('div');
+                userInfoContainer.classList.add('flex', 'flex-col', 'mx-2');
+
+                const userName = document.createElement('span');
+                userName.textContent = option;
+                userName.classList.add('pt-2', 'text-base', 'font-semibold');
+
+                const userRole = document.createElement('span');
+                userRole.textContent = getCombinedDataFromLS[index].userStatus;
+
+                userInfoContainer.appendChild(userName);
+                userInfoContainer.appendChild(userRole);
+
+                li.appendChild(userInfoContainer);
+
+                li.onclick = () => selectReviewerOption(option);
+                TaskreviewerList.appendChild(li);
+            });
+        }
+
+        function SearchForReviewer() {
+            const searchInput = document.getElementById('TaskReviewInput');
+            const usersdropdown = document.getElementById('TaskReviewdropdown');
+            const searchTerm = searchInput.value.toLowerCase();
+
+            const filteredUserArray = fullNames.filter(option => option.toLowerCase().includes(searchTerm));
+            // console.log(filteredUserArray);
+
+            populateTaskReviewerDropdown(filteredUserArray);
+            usersdropdown.classList.toggle('hidden', filteredUserArray.length === 0);
+            usersdropdown.style.display = 'block';
+        }
+
+        function selectReviewerOption(option) {
+            // const searchInput = document.getElementById('TaskReviewInput');
+            // searchInput.value = option;
+            // // owner.push(option);
+            // // console.log(owner);
+
+            // const selectedUser = getCombinedDataFromLS.find(user => user.userFullName === option);
+            // if (selectedUser) {
+            //     selectedTaskReviewUserId = selectedUser.userId;
+            //     console.log('Selected TaskReview UserId:', selectedTaskReviewUserId);
+
+            //     const usersdropdown = document.getElementById('TaskReviewdropdown');
+            //     usersdropdown.style.display = 'none';
+            //     clearReviewer.style.display = "inline"
+            //     document.getElementById('TaskReviewdropdown').classList.add('hidden');
+            // }
+
+            document.getElementById('TaskReviewInput').style.display = 'none';
+            document.getElementById('TaskReviewdropdown').style.display = 'none';
+
+            const selectedMatterTypesContainer = document.getElementById('selectedReviewUser');
+            const existingMatterTypeItems = selectedMatterTypesContainer.querySelectorAll('.review-type-toast-item');
+
+            const selectedUser = getCombinedDataFromLS.find(user => user.userFullName === option);
+            if (selectedUser) {
+                selectedTaskReviewUserId = selectedUser.userId;
+                console.log('Selected TaskReview UserId:', selectedTaskReviewUserId);
+
+                selectedReviewerUserStatus = selectedUser.userStatus;
+                console.log('Selected Assigntask UserStatus:', selectedReviewerUserStatus);
+            }
+
+            const initials = getInitials(option);
+            const bgColor = getRandomColor();
+
+            assignReviewerUser.push(option);
+            console.log(assignReviewerUser);
+            const toastContainer = document.getElementById('selectedReviewUser');
+            const toast = document.createElement('div');
+            toast.className = 'flex justify-between items-center p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 mb-2 review-type-toast-item';
+            toast.style.width = '60%';
+            toast.dataset.option = option;
+            toast.innerHTML = `
+                <div class="flex items-center">
+                    <div class="ms-3 text-sm font-normal flex items-center flex-row">
+                        <span style="height: 30px; width: 30px; background: ${bgColor};" class="rounded-full text-white flex items-center justify-center">${initials.toUpperCase()}</span> 
+                        <div class="flex flex-col">
+                            <span style="padding-top: 5px; font-size: 16px;" class="px-2 font-semibold text-black">${option}</span>
+                            <span class="px-2">${selectedReviewerUserStatus}</span>
+                        </div>                    
+                    </div>
+                </div>
+                <button type="button" class="-mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" onclick="removeSelectedReviewUser(this)" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                </button>    
+            `;
+
+            toastContainer.appendChild(toast);
+        }
+
+        function getInitials(name) {
+            const words = name.split(' ', 2);
+            const initials = words.map(word => word.charAt(0)).join('');
+            return initials;
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function removeSelectedReviewUser(button) {
+            const toast = button.parentElement;
+            const toastContainer = toast.parentElement;
+            const optionToRemove = toast.dataset.option;
+            assignReviewerUser = assignReviewerUser.filter(option => option !== optionToRemove);
+            // console.log(assignReviewerUser);
+
+            document.getElementById('TaskReviewInput').style.display = 'block';
+            toastContainer.removeChild(toast);
+        }
+
+        function showDropdown() {
+            const usersdropdown = document.getElementById('TaskReviewdropdown');
+            usersdropdown.style.display = 'block';
+        }
+
+        function clearReviewerSelection() {
+            const searchInput = document.getElementById('TaskReviewInput');
+            searchInput.value = '';
+            // owner = [];
+            // console.log(owner);
+
+            document.getElementById('TaskReviewdropdown').classList.add('hidden');
+            clearReviewer.style.display = "none"
+        }
+
+        document.addEventListener('click', function (event) {
+            const usersinput = document.getElementById('TaskReviewInput');
+            const usersdropdown = document.getElementById('TaskReviewdropdown');
+
+            if (!usersinput.contains(event.target) && !usersdropdown.contains(event.target)) {
+                hideReviewerdropdown();
+            }
+        });
+
+        function hideReviewerdropdown() {
+            const dropdown = document.getElementById('TaskReviewdropdown');
+            dropdown.style.display = 'none';
+        } // Task Reviewer ends
+
+        function close() {
+            let close = true;
+            Office.context.ui.messageParent(close.toString());
+        }
+
+        document.getElementById("close").addEventListener("click", close);
+    </script>
+</body>
+
+</html>

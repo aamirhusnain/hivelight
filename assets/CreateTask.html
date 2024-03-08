@@ -65,97 +65,96 @@
     <div class="loader z-10" id="loader"></div>
     <div class="loader-overlay" id="loaderOverlay"></div>
 
-    <div class="p-3 z-20">
-        <div>
-            <span class="text-xl text-gray-900 font-semibold">Create Task</span>
-            <hr class="relative top-2 h-0.5 border-t-0 bg-black opacity-10" />
-        </div>
+    <form>
+        <div class="p-3 z-20">
+            <div>
+                <span id="createTask" class="text-xl text-gray-900 font-semibold"></span>
+                <hr class="relative top-2 h-0.5 border-t-0 bg-black opacity-10" />
+            </div>
 
-        <div class="pt-5">
-            <label for="Task" class="block mb-2 text-gray-700 text-base font-bold">Task name</label>
-            <input type="text" id="Taskname"
-                class="block bg-white w-4/6 border border-gray-300 text-black text-sm font-normal rounded-md focus:border-gray-400 focus:border-2 p-3 focus:outline-none">
-        </div>
+            <div class="pt-5">
+                <label for="Task" id="taskName" class="block mb-2 text-gray-700 text-base font-bold"></label>
+                <input type="text" id="Taskname"
+                    class="block bg-white w-4/6 border border-gray-300 text-black text-sm font-normal rounded-md focus:border-gray-400 focus:border-2 p-3 focus:outline-none">
+            </div>
 
-        <div class="w-full">
-            <label class="block text-gray-700 text-sm font-bold pt-2 mb-2">Task Description</label>
-            <div class="">
-                <span id="editorjs" name="editor" class="textarea z-10 bg-aliceblue border border-gray-300 rounded p-4"
-                    role="textbox" contenteditable></span>
-                <!-- <div id="editorjs" name="editor" class="relative z-10 bg-aliceblue border border-gray-300 rounded p-4"
-                    style="max-height: 150px; overflow-y: auto;padding: 51px;"></div> -->
-                <!-- <div id="loader-icon">
+            <div class="w-full">
+                <label id="taskDescription" class="block text-gray-700 font-bold pt-2 mb-2"></label>
+                <div class="">
+                    <span id="editorjs" name="editor"
+                        class="textarea z-10 bg-aliceblue border border-gray-300 rounded p-4" role="textbox"
+                        contenteditable></span>
+                    <!-- <div id="editorjs" name="editor"
+                        class="relative z-10 bg-aliceblue border border-gray-300 rounded p-4"
+                        style="max-height: 150px; overflow-y: auto;padding: 51px;"></div>
+                    <div id="loader-icon">
                         <img src="loader.gif" id="image-size" />
                     </div> -->
-            </div>
-        </div>
-
-        <div class="pt-5">
-            <label for="Assigntask" class="block mb-2 text-gray-700 text-base font-bold">Assign task to</label>
-            <input id="Assigntask" type="text" placeholder="Search for user" onfocus="SearchForAssigning()"
-                class="w-3/5 px-2 py-2 bg-white text-sm border-2 border-gray-200 focus:border-gray-400 rounded outline-none relative" />
-            <i class="fas fa-times relative right-7 cursor-pointer" onclick="clearSelection()" id="userclearicon"></i>
-
-            <div id="usersdropdown"
-                style="overflow: scroll; overflow-x: unset; height: 111px; z-index: 1; width: 58%; height: 28%;"
-                class="absolute mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
-
-                <ul id="optionsList" class="py-1">
-                    <!-- Options will be dynamically added here -->
-                </ul>
+                </div>
             </div>
 
-            <div id="selectedAssignUser" class="mt-2">
-                <!-- Selected matter types will be dynamically added here -->
-            </div>
-        </div>
+            <div class="pt-5">
+                <label id="assignTaskTo" for="Assigntask" class="block mb-2 text-gray-700 text-base font-bold"></label>
+                <input id="Assigntask" type="text" placeholder="Search for user" onfocus="SearchForAssigning()"
+                    class="w-3/5 px-2 py-2 bg-white text-sm border-2 border-gray-200 focus:border-gray-400 rounded outline-none relative" />
 
-        <div class="pt-5">
-            <label for="TaskReviewer" class="block mb-2 text-gray-700 text-base font-bold">Assign task to</label>
-            <input id="TaskReviewInput" type="text" placeholder="Search for user" onfocus="SearchForReviewer()"
-                class="w-3/5 px-2 py-2 bg-white text-sm border-2 border-gray-200 focus:border-gray-400 rounded outline-none relative" />
-            <i class="fas fa-times relative right-7 cursor-pointer" onclick="clearReviewerSelection()"
-                id="clearReviewer"></i>
+                <div id="usersdropdown"
+                    style="overflow: scroll; overflow-x: unset; height: 111px; z-index: 1; width: 58%; height: 28%;"
+                    class="absolute mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
 
-            <div id="TaskReviewdropdown"
-                style="overflow: scroll; overflow-x: unset; height: 111px; z-index: 1; width: 58%; height: 28%;"
-                class="absolute mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+                    <ul id="optionsList" class="py-1">
+                        <!-- Options will be dynamically added here -->
+                    </ul>
+                </div>
 
-                <ul id="TaskreviewerList" class="py-1">
-                    <!-- Options will be dynamically added here -->
-                </ul>
+                <div id="selectedAssignUser" style="margin-top: 0%;">
+                    <!-- Selected matter types will be dynamically added here -->
+                </div>
             </div>
 
-            <div id="selectedReviewUser" class="mt-2">
-                <!-- Selected matter types will be dynamically added here -->
-            </div>
-        </div>
-    </div>
+            <div class="pt-5">
+                <label id="reviewTaskTo" for="Assigntask" class="block mb-2 text-gray-700 text-base font-bold"></label>
+                <input id="TaskReviewInput" type="text" placeholder="Search for user" onfocus="SearchForReviewer()"
+                    class="w-3/5 px-2 py-2 bg-white text-sm border-2 border-gray-200 focus:border-gray-400 rounded outline-none relative" />
 
-    <div>
-        <div class="relative pt-2 flex rounded-lg" style="margin-left: -10%; margin-top: -4%;">
-            <div x-data
-                x-init="flatpickr($refs.datetimewidget, {wrap: true, enableTime: true, defaultDate: 'today', maxDate: 'today', dateFormat: 'M j, Y h:i K',});"
-                x-ref="datetimewidget" class="flatpickr container mx-auto col-span-6 sm:col-span-6 mt-5">
-                <label for="inp4" class="block pt-3 text-gray-700 text-base font-bold">Due date</label>
-                <div class="relative pt-2 flex rounded-lg">
-                    <input x-ref="datetime" type="text" id="dueDate" data-input placeholder="Select data & time"
-                        class="p-2 block w-4/6 border-2 border-gray-200 rounded text-md focus:border-gray-400 focus:border-2 focus:outline-none"
-                        style="height: 45px;" />
-                    <button type="button"
-                        class="-ms-px py-3 px-4 inline-flex border-2 rounded justify-center items-center gap-2 font-medium bg-white text-black text-base align-middle hover:bg-gray-50 focus:border-gray-400 focus:border-2 focus:outline-none"
-                        style="height: 45px;">
-                        Change
-                    </button>
+                <div id="TaskReviewdropdown"
+                    style="overflow: scroll; overflow-x: unset; height: 111px; z-index: 1; width: 58%; height: 28%;"
+                    class="absolute mt-2 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+
+                    <ul id="TaskreviewerList" class="py-1">
+                        <!-- Options will be dynamically added here -->
+                    </ul>
+                </div>
+
+                <div id="selectedReviewUser" style="margin-top: 0%;">
+                    <!-- Selected matter types will be dynamically added here -->
                 </div>
             </div>
         </div>
-        <p class="px-3">
-            The due date of a task cannot be later than the target date of the milestone </br>
-            it belongs to. Extend the milestone target date to extend the task.
-        </p>
-    </div>
-    </div>
+
+        <div>
+            <div class="relative pt-2 flex rounded-lg" style="margin-left: -22%; margin-top: -4%;">
+                <div x-data
+                    x-init="flatpickr($refs.datetimewidget, {wrap: true, enableTime: true, defaultDate: 'today', maxDate: 'today', dateFormat: 'M j, Y h:i K',});"
+                    x-ref="datetimewidget" class="flatpickr container mx-auto col-span-6 sm:col-span-6 mt-5">
+                    <label id="taskDueDate" for="inp4" style="padding-left: 7%;"
+                        class="block pt-3 text-gray-700 text-base font-bold"></label>
+                    <div class="relative pt-2 flex rounded-lg">
+                        <input x-ref="datetime" style="margin-left: 7%;" type="text" id="dueDate" data-input
+                            placeholder="Select data & time"
+                            class="p-2 block w-4/6 border-2 border-gray-200 rounded text-md focus:border-gray-400 focus:border-2 focus:outline-none"
+                            style="height: 45px;" />
+                        <button type="button"
+                            class="-ms-px py-3 px-4 inline-flex border-2 rounded justify-center items-center gap-2 font-medium bg-white text-black text-base align-middle hover:bg-gray-50 focus:border-gray-400 focus:border-2 focus:outline-none"
+                            style="height: 45px;">
+                            Change
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <p id="TaskDueDateDes" class="px-3"></p>
+        </div>
+    </form>
 
     <footer class="bg-gray-100 p-4 flex justify-end gap-3 sticky bottom-0">
         <button id="close"
@@ -192,17 +191,43 @@
             loaderOverlay.style.display = 'none';
         }
 
-        // Office.onReady(function () {
-        //     startLoader();
-        //     Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived,
-        //         onMessageFromParent);
-        // });
-
         Office.onReady(function () {
-            // startLoader();
+            startLoader();
             Office.context.ui.addHandlerAsync(Office.EventType.DialogParentMessageReceived,
                 onMessageFromParent);
         });
+
+        let createTaskObj = {
+            createTaskTitle: "Create Task",
+            taskName: "Task Name",
+            taskDescription: "Task Description",
+            assignTaskTo: "Assign task to",
+            reviewTaskTo: "Review task to",
+            taskDueDate: "Due date",
+            TaskDueDateDes: "The due date of a task cannot be later than the target date of the milestone it belongs to. Extend the milestone target date to extend the task.",
+        };
+        // console.log(createTaskObj);
+
+        const createTaskTitle = document.getElementById("createTask");
+        createTaskTitle.textContent = createTaskObj.createTaskTitle;
+
+        const taskName = document.getElementById("taskName");
+        taskName.textContent = createTaskObj.taskName;
+
+        const taskDescription = document.getElementById("taskDescription");
+        taskDescription.textContent = createTaskObj.taskDescription;
+
+        const assignTaskTo = document.getElementById("assignTaskTo");
+        assignTaskTo.textContent = createTaskObj.assignTaskTo;
+
+        const reviewTaskTo = document.getElementById("reviewTaskTo");
+        reviewTaskTo.textContent = createTaskObj.reviewTaskTo;
+
+        const taskDueDate = document.getElementById("taskDueDate");
+        taskDueDate.textContent = createTaskObj.taskDueDate;
+
+        const TaskDueDateDes = document.getElementById("TaskDueDateDes");
+        TaskDueDateDes.textContent = createTaskObj.TaskDueDateDes;
 
         // if (navigator.geolocation) {
         //     navigator.geolocation.getCurrentPosition(
@@ -231,6 +256,7 @@
             },
             data: { blocks: [] }
         });
+        let baseUrl = "https://app-staging.hivelight.com/";
 
         let BearerToken;
         let mailSubject;
@@ -241,60 +267,51 @@
         let currentMatterId;
         let workspaceId;
         let currentMatterWorkspaceId;
-        let userId;
+        let assignTaskUser = [];
         let selectedAssigntaskUserId;
+        let selectedAssignUserStatus;
+        let assignReviewerUser = [];
         let selectedTaskReviewUserId;
+        let selectedReviewerUserStatus;
         let fullNames = [];
-        let combinedData = [];
+        let userCombinedData = [];
         let userData = [];
-        // let selectedMilestoneId;
         let currentMilestoneId;
-        let selectedMileStoneDueDate;
-        let selectedMileStoneDescriptionType;
-        let selectedMileStoneDescriptionText;
-        let authenicateToken;
         let getCombinedDataFromLS;
         let userNames;
         let newAuthenicateToken;
-        // let selectedWorkspaceId;
+        let workspaceNewAuthenicateToken;
         let taskId;
         function onMessageFromParent(arg) {
-            // startLoader();
+            startLoader();
             const messageFromParent = JSON.parse(arg.message);
             mailBody = messageFromParent.mailBody;
             // console.log(mailBody);
             localStorage.setItem("mailBody", mailBody);
-            mailBodyFromLS = localStorage.getItem("mailBody");
-            console.log(mailBodyFromLS);
-            editor.blocks.renderFromHTML(mailBodyFromLS);
 
-            document.getElementById("Taskname").value = messageFromParent.subject;
             mailSubject = messageFromParent.subject;
             // console.log(mailSubject);
             localStorage.setItem("mailSubject", mailSubject);
 
-            BearerToken = messageFromParent.token;
-            // console.log(BearerToken);
-
-            matterId = messageFromParent.matterid;
+            matterId = messageFromParent.matterId;
             // console.log(matterId);
 
             currentMatterId = messageFromParent.currentMatterId;
             // console.log(currentMatterId);
 
-            workspaceId = messageFromParent.workspaceid;
-            // console.log(workspaceId);
-
             currentMatterWorkspaceId = messageFromParent.currentMatterWorkspaceId;
             // console.log(currentMatterWorkspaceId);
 
-            newAuthenicateToken = messageFromParent.newAuthenicateToken;
-            // console.log(newAuthenicateToken);
+            newAuthenicateToken = messageFromParent.BearerToken;
+            localStorage.setItem("newAuthenicateToken", JSON.stringify(newAuthenicateToken));
+            const workspaceAuthenicateToken = localStorage.getItem("newAuthenicateToken");
+            workspaceNewAuthenicateToken = JSON.parse(workspaceAuthenicateToken);
+            console.log(workspaceNewAuthenicateToken);
 
             // Fetch All Users
-            if (newAuthenicateToken) {
+            if (workspaceNewAuthenicateToken) {
                 var myNewHeaders = new Headers();
-                myNewHeaders.append("Authorization", "Bearer " + newAuthenicateToken);
+                myNewHeaders.append("Authorization", "Bearer " + workspaceNewAuthenicateToken);
 
                 var requestOptions = {
                     method: 'GET',
@@ -302,7 +319,7 @@
                     redirect: 'follow'
                 };
 
-                fetch("https://app-staging.hivelight.com/v1/users?matterId=" + matterId, requestOptions)
+                fetch(baseUrl + "v1/users?matterId=" + matterId, requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         // console.log(result);
@@ -316,40 +333,28 @@
                         }
                         // console.log(userData);
 
-                        combinedData = userData.userFullName.map((fullName, index) => ({
+                        userCombinedData = userData.userFullName.map((fullName, index) => ({
                             userId: userData.userId[index],
                             userFullName: fullName,
                             userStatus: userData.userStatus[index]
                         }));
-                        // console.log(combinedData);
-                        localStorage.setItem("combinedData", JSON.stringify(combinedData));
-                        // endLoader();
+                        // console.log(userCombinedData);
+
+                        // fullNames = userCombinedData.map(user => user.userFullName);
+                        // console.log('Full Names:', fullNames);
+
+                        localStorage.setItem("userCombinedData", JSON.stringify(userCombinedData));
+                        updateTaskDialogData();
+                        endLoader();
                     })
                     .catch(error => {
                         console.log('error', error);
-                        // endLoader();
+                        endLoader();
                     });
             }
 
-            // selectedMilestoneId = messageFromParent.selectedMilestoneId;
-            // console.log(selectedMilestoneId);
-
             currentMilestoneId = messageFromParent.currentMilestoneId;
             console.log(currentMilestoneId);
-
-            selectedMileStoneDueDate = messageFromParent.selectedMileStoneDueDate;
-            console.log(selectedMileStoneDueDate);
-
-            selectedMileStoneDescriptionType = messageFromParent.selectedMileStoneDescriptionType;
-            console.log(selectedMileStoneDescriptionType);
-
-            selectedMileStoneDescriptionText = messageFromParent.selectedMileStoneDescriptionText;
-            console.log(selectedMileStoneDescriptionText);
-
-            // selectedWorkspaceId = messageFromParent.selectedWorkspaceId;
-            // console.log(selectedWorkspaceId);
-
-            localStorage.setItem("Token", JSON.stringify(BearerToken));
         }
 
         // Close Dialog Function
@@ -357,15 +362,6 @@
         function closeDialog() {
             Office.context.ui.messageParent(JSON.stringify(cancelDialog));
         }
-
-        // document.getElementById("Taskname").value = subject;
-        // document.getElementById("editorjs").innerHTML = emailbody;
-
-        const storedToken = window.localStorage.getItem("Token");
-        const savedToken = JSON.parse(storedToken);
-        console.log(savedToken);
-
-        let baseUrl = "https://app-staging.hivelight.com/";
 
         // Create Matter Function
         function createTask() {
@@ -388,7 +384,7 @@
 
             const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
-            myHeaders.append("Authorization", "Bearer " + newAuthenicateToken);
+            myHeaders.append("Authorization", "Bearer " + workspaceNewAuthenicateToken);
 
             const requestData = {
                 "jsonapi": {
@@ -418,7 +414,7 @@
                 redirect: "follow"
             };
 
-            fetch("https://app-staging.hivelight.com/v1/tasks", requestOptions)
+            fetch(baseUrl + "v1/tasks", requestOptions)
                 .then((response) => response.text())
                 .then((result) => {
                     console.log(result);
@@ -441,22 +437,22 @@
                 });
         }
 
-        // Get Task Dialog Data from local Storage
-        mailSubjectFromLS = localStorage.getItem("mailSubject");
-        console.log(mailSubjectFromLS);
-        document.getElementById("Taskname").value = mailSubjectFromLS;
+        const updateTaskDialogData = () => {
+            mailSubjectFromLS = localStorage.getItem("mailSubject");
+            // console.log(mailSubjectFromLS);
+            document.getElementById("Taskname").value = mailSubjectFromLS;
 
-        const getCombinedData = localStorage.getItem("combinedData");
-        getCombinedDataFromLS = JSON.parse(getCombinedData);
-        console.log(getCombinedDataFromLS);
+            mailBodyFromLS = localStorage.getItem("mailBody");
+            // console.log(mailBodyFromLS);
+            editor.blocks.renderFromHTML(mailBodyFromLS);
 
-        fullNames = getCombinedDataFromLS.map(user => user.userFullName);
-        console.log('Full Names:', fullNames);
+            const getCombinedData = window.localStorage.getItem("userCombinedData");
+            getCombinedDataFromLS = JSON.parse(getCombinedData);
+            console.log(getCombinedDataFromLS);
 
-        let assignTaskUser = [];
-        let selectedAssignUserStatus;
-        let userclearicon = document.getElementById('userclearicon');
-        userclearicon.style.display = "none";
+            fullNames = getCombinedDataFromLS.map(user => user.userFullName);
+            console.log('Full Names:', fullNames);
+        }
 
         function populateDropdown(filteredOptions) {
             const optionsList = document.getElementById('optionsList');
@@ -500,7 +496,6 @@
 
                 li.appendChild(user);
 
-                // Styling portion for name and role
                 const userInfoContainer = document.createElement('div');
                 userInfoContainer.classList.add('flex', 'flex-col', 'mx-2');
 
@@ -536,22 +531,6 @@
         }
 
         function selectOption(option) {
-            // const searchInput = document.getElementById('Assigntask');
-            // searchInput.value = option;
-            // // owner.push(option);
-            // // console.log(owner);
-
-            // const selectedUser = getCombinedDataFromLS.find(user => user.userFullName === option);
-            // if (selectedUser) {
-            //     selectedAssigntaskUserId = selectedUser.userId;
-            //     console.log('Selected Assigntask UserId:', selectedAssigntaskUserId);
-
-            //     const usersdropdown = document.getElementById('usersdropdown');
-            //     usersdropdown.style.display = 'none';
-            //     userclearicon.style.display = "inline"
-            //     document.getElementById('usersdropdown').classList.add('hidden');
-            // }
-
             document.getElementById('Assigntask').style.display = 'none';
             document.getElementById('usersdropdown').style.display = 'none';
 
@@ -574,7 +553,7 @@
             console.log(assignTaskUser);
             const toastContainer = document.getElementById('selectedAssignUser');
             const toast = document.createElement('div');
-            toast.className = 'flex justify-between items-center p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 mb-2 task-type-toast-item';
+            toast.className = 'flex justify-between items-center p-3 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 mb-2 task-type-toast-item';
             toast.style.width = '60%';
             toast.dataset.option = option;
             toast.innerHTML = `
@@ -629,36 +608,22 @@
             usersdropdown.style.display = 'block';
         }
 
-        function clearSelection() {
-            const searchInput = document.getElementById('Assigntask');
-            searchInput.value = '';
-            // owner = [];
-            // console.log(owner);
-
-            document.getElementById('usersdropdown').classList.add('hidden');
-            userclearicon.style.display = "none";
+        function hideusersdropdown() {
+            const dropdown = document.getElementById('usersdropdown');
+            dropdown.style.display = 'none';
         }
 
         document.addEventListener('click', function (event) {
             const usersinput = document.getElementById('Assigntask');
             const usersdropdown = document.getElementById('usersdropdown');
 
+            // Check if the click was outside the input and the dropdown
             if (!usersinput.contains(event.target) && !usersdropdown.contains(event.target)) {
                 hideusersdropdown();
             }
         });
 
-        function hideusersdropdown() {
-            const dropdown = document.getElementById('usersdropdown');
-            dropdown.style.display = 'none';
-        } // search user ends
-
         // Task Reviewer start
-        let assignReviewerUser = [];
-        let selectedReviewerUserStatus;;
-        let clearReviewer = document.getElementById('clearReviewer');
-        clearReviewer.style.display = "none";
-
         function populateTaskReviewerDropdown(filteredOptions) {
             const TaskreviewerList = document.getElementById('TaskreviewerList');
             TaskreviewerList.innerHTML = '';
@@ -735,22 +700,6 @@
         }
 
         function selectReviewerOption(option) {
-            // const searchInput = document.getElementById('TaskReviewInput');
-            // searchInput.value = option;
-            // // owner.push(option);
-            // // console.log(owner);
-
-            // const selectedUser = getCombinedDataFromLS.find(user => user.userFullName === option);
-            // if (selectedUser) {
-            //     selectedTaskReviewUserId = selectedUser.userId;
-            //     console.log('Selected TaskReview UserId:', selectedTaskReviewUserId);
-
-            //     const usersdropdown = document.getElementById('TaskReviewdropdown');
-            //     usersdropdown.style.display = 'none';
-            //     clearReviewer.style.display = "inline"
-            //     document.getElementById('TaskReviewdropdown').classList.add('hidden');
-            // }
-
             document.getElementById('TaskReviewInput').style.display = 'none';
             document.getElementById('TaskReviewdropdown').style.display = 'none';
 
@@ -773,7 +722,7 @@
             console.log(assignReviewerUser);
             const toastContainer = document.getElementById('selectedReviewUser');
             const toast = document.createElement('div');
-            toast.className = 'flex justify-between items-center p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 mb-2 review-type-toast-item';
+            toast.className = 'flex justify-between items-center p-3 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 mb-2 review-type-toast-item';
             toast.style.width = '60%';
             toast.dataset.option = option;
             toast.innerHTML = `
@@ -828,29 +777,20 @@
             usersdropdown.style.display = 'block';
         }
 
-        function clearReviewerSelection() {
-            const searchInput = document.getElementById('TaskReviewInput');
-            searchInput.value = '';
-            // owner = [];
-            // console.log(owner);
-
-            document.getElementById('TaskReviewdropdown').classList.add('hidden');
-            clearReviewer.style.display = "none"
+        function hideReviewerdropdown() {
+            const dropdown = document.getElementById('TaskReviewdropdown');
+            dropdown.style.display = 'none';
         }
 
         document.addEventListener('click', function (event) {
             const usersinput = document.getElementById('TaskReviewInput');
             const usersdropdown = document.getElementById('TaskReviewdropdown');
 
+            // Check if the click was outside the input and the dropdown
             if (!usersinput.contains(event.target) && !usersdropdown.contains(event.target)) {
                 hideReviewerdropdown();
             }
         });
-
-        function hideReviewerdropdown() {
-            const dropdown = document.getElementById('TaskReviewdropdown');
-            dropdown.style.display = 'none';
-        } // Task Reviewer ends
 
         function close() {
             let close = true;
